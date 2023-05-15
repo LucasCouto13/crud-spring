@@ -2,6 +2,7 @@ package com.example.Crud.Spring.controller;
 
 import com.example.Crud.Spring.model.Course;
 import com.example.Crud.Spring.repository.CourseRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +41,13 @@ public class CourseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Course save(@RequestBody Course course){
+    public Course save(@RequestBody @Valid Course course){
         return courseRepository.save(course);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> update(@PathVariable("id") Long id,
-                        @RequestBody Course course){
+                        @RequestBody @Valid Course course){
         return courseRepository.findById(id)
                 .map(request -> {
                     request.setName(course.getName());
