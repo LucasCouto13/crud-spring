@@ -29,12 +29,12 @@ public class CourseController {
     private final CourseRepository courseRepository;
     @GetMapping
     public List<Course> lista(){
-        return courseRepository.findAll();
+        return courseRepository.findAllCourses();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> listaPorId(@PathVariable("id") Long id){
-        return courseRepository.findById(id)
+        return courseRepository.findByIdAndStatus(id)
                 .map(course -> ResponseEntity.ok().body(course))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -61,7 +61,8 @@ public class CourseController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id){
         return courseRepository.findById(id)
                 .map(request -> {
-                    courseRepository.deleteById(id);
+                    request.setStatus("Inativo");
+                    courseRepository.save(request);
                     return ResponseEntity.noContent().build();
                 })
                 .orElse(ResponseEntity.notFound().build());
